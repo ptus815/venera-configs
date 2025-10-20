@@ -9,3 +9,5 @@ Configuration file repository for venera
 3. Edit `your_config_name.js` to your needs. 
    - The `_template_.js` file contains comments to help you with that. 
    - The `_venera_.js` is used for code completion in your IDE.
+  
+   - PS：部署cf-webproxy.js到cloudflare将workers地址填入igay69_magazine.js文件中的代理地址
