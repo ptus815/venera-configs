@@ -1,10 +1,10 @@
 class IGay69Magazine extends ComicSource {
-    name = "IGay69Magazine";
-    key = "igay69mag";
+    name = "IGay69 Magazine";
+    key = "igay69_mag";
     version = "1.0.1";
     minAppVersion = "1.0.0";
     // 可留空或指向你托管此脚本的 URL
-    url = "https://cdn.jsdelivr.net/gh/ptus815/venera-configs@main/igay69_magazine.js";
+    url = "https://raw.githubusercontent.com/ptus815/venera-configs/main/igay69_magazine.js";
 
     // 代理前缀（Workers）
     proxyBase = "https://eason086.dpdns.org/";
@@ -105,6 +105,18 @@ class IGay69Magazine extends ComicSource {
             },
         },
     ];
+
+    // 搜索（最小占位，避免解析器读取 search.enableTagsSuggestions 报错）
+    search = {
+        enableTagsSuggestions: false,
+        onTagSuggestionSelected: (namespace, tag) => {
+            return `${namespace}:${tag}`;
+        },
+        // 安全兜底：返回空结果，表示不支持站内搜索
+        load: async (keyword, option, page) => {
+            return { comics: [], maxPage: 1 };
+        },
+    };
 
     // 单本详情
     comic = {
