@@ -12,12 +12,6 @@
         "version": "1.0.2"
     },
     {
-        "name": "IGay69 Magazine",
-        "fileName": "igay69_magazine.js",
-        "key": "igay69_magazine",
-        "version": "1.0.0"
-    },
-    {
         "name": "包子漫画",
         "fileName": "baozi.js",
         "key": "baozi",
@@ -99,10 +93,10 @@
         "version": "1.0.1"
     },
     {
-        "name": "漫画柜",
-        "fileName": "manhuagui.js",
-        "key": "ManHuaGui",
-        "version": "1.1.0"
+      "name": "漫画柜",
+      "fileName": "manhuagui.js",
+      "key": "ManHuaGui",
+      "version": "1.1.0"
     },
     {
         "name": "漫蛙吧",
@@ -115,5 +109,12 @@
         "fileName": "lanraragi.js",
         "key": "lanraragi",
         "version": "1.1.0"
+    },
+    {
+        "name": "IGay69 Magazine",
+        "fileName": "igay69_magazine.js",
+        "key": "igay69_mag",
+        "version": "1.0.1",
+        "description": "IGay69 magazine via workers proxy"
     }
 ]
