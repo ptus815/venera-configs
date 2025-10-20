@@ -7,7 +7,7 @@ class IGay69Magazine extends ComicSource {
     url = "https://raw.githubusercontent.com/ptus815/venera-configs/main/igay69_magazine.js";
 
     // 代理前缀（Workers）
-    proxyBase = ""; // 部署你的workers地址
+    proxyBase = ""; // 填写你部署的workers地址
 
     
     proxify(url) {
