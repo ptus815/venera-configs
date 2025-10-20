@@ -3,13 +3,13 @@ class IGay69Magazine extends ComicSource {
     key = "igay69_mag";
     version = "1.0.1";
     minAppVersion = "1.0.0";
-    // 可留空或指向你托管此脚本的 URL
+    
     url = "https://raw.githubusercontent.com/ptus815/venera-configs/main/igay69_magazine.js";
 
     // 代理前缀（Workers）
     proxyBase = ""; // 部署你的workers地址
 
-    // 将真实 URL 包装为代理 URL
+    
     proxify(url) {
         if (!url) return url;
         if (url.startsWith("http")) {
@@ -21,14 +21,14 @@ class IGay69Magazine extends ComicSource {
         return this.proxyBase + "https://igay69.com/" + url;
     }
 
-    // 解析最大页数（从分页链接中提取）
+    
     _extractMaxPage(doc) {
         let links = doc.querySelectorAll('a');
         let maxPage = 1;
         for (let a of links) {
             let href = a?.attributes?.href;
             if (!href) continue;
-            // 例如 /category/magazine/page/154/
+           
             let m = href.match(/\/category\/magazine\/page\/(\d+)\/?/i);
             if (m && m[1]) {
                 let n = parseInt(m[1], 10);
@@ -38,26 +38,26 @@ class IGay69Magazine extends ComicSource {
         return maxPage;
     }
 
-    // 取图片 URL（优先 data-src，再退回 src），并归一化为绝对 URL
+    
     _pickImgSrc(img) {
         if (!img) return null;
         let attrs = img.attributes ?? {};
         let url = attrs["data-src"] || attrs["data-lazy-src"] || attrs["src"] || "";
         if (!url) return null;
-        // 图片一般来自 i.postimg.cc 或站内 wp-content，URL 通常已是绝对链接
+        
         if (url.startsWith("//")) return "https:" + url;
         if (url.startsWith("http")) return url;
-        // 相对路径（少见），拼 igay69
+        
         if (url.startsWith("/")) return "https://igay69.com" + url;
         return "https://igay69.com/" + url;
     }
 
-    // 从元素中查找第一个 img
+    
     _findFirstImg(el) {
         return el?.querySelector?.('img') ?? null;
     }
 
-    // 探索页（仅一个：MAGAZINE 列表），按页抓取
+    
     explore = [
         {
             title: "MAGAZINE",
@@ -72,22 +72,22 @@ class IGay69Magazine extends ComicSource {
                 const html = res.body;
                 const doc = new HtmlDocument(html);
 
-                // WordPress 列表：每条为 article
+                
                 const articles = doc.querySelectorAll('article');
                 const comics = [];
 
                 for (let art of articles) {
-                    // 标题与详情链接
+                    
                     let titleA = art.querySelector('h2 a') || art.querySelector('a[rel="bookmark"]') || art.querySelector('a');
                     let title = titleA?.text || "";
                     let href = titleA?.attributes?.href || "";
                     if (!title || !href) continue;
 
-                    // 封面
+                   
                     let img = this._findFirstImg(art);
                     let cover = this._pickImgSrc(img);
 
-                    // 详情 id 用真实 URL，后续会 proxify 获取 HTML
+                    
                     const comic = new Comic({
                         id: href,
                         title: title,
@@ -106,38 +106,38 @@ class IGay69Magazine extends ComicSource {
         },
     ];
 
-    // 搜索（最小占位，避免解析器读取 search.enableTagsSuggestions 报错）
+    
     search = {
         enableTagsSuggestions: false,
         onTagSuggestionSelected: (namespace, tag) => {
             return `${namespace}:${tag}`;
         },
-        // 安全兜底：返回空结果，表示不支持站内搜索
+       
         load: async (keyword, option, page) => {
             return { comics: [], maxPage: 1 };
         },
     };
 
-    // 单本详情
+    
     comic = {
-        // 详情信息：设定一个章节“Photos”
+        
         loadInfo: async (id) => {
             const url = this.proxify(id);
             const res = await Network.get(url, {});
             const html = res.body;
             const doc = new HtmlDocument(html);
 
-            // 标题（回退到 h1 或 <title>）
+            
             let title = doc.querySelector('h1')?.text?.trim();
             if (!title) {
-                // 尝试文章标题常见容器
+                
                 title = doc.querySelector('.entry-title')?.text?.trim() || "MAGAZINE";
             }
 
-            // 构造一个章节
+            
             const chapters = { "1": "Photos" };
 
-            // 简要封面尝试（正文第一张图作为封面）
+            
             let firstImg = doc.querySelector('article img') || doc.querySelector('.entry-content img');
             let cover = this._pickImgSrc(firstImg) || "";
 
@@ -167,14 +167,14 @@ class IGay69Magazine extends ComicSource {
             return detail;
         },
 
-        // 载入章节图片（仅一章）
+
         loadEp: async (comicId, epId) => {
             const url = this.proxify(comicId);
             const res = await Network.get(url, {});
             const html = res.body;
             const doc = new HtmlDocument(html);
 
-            // 在正文抓取所有 img（支持 data-src/src）
+            
             const container =
                 doc.querySelector('.entry-content') ||
                 doc.querySelector('article') ||
@@ -187,11 +187,11 @@ class IGay69Magazine extends ComicSource {
                 const src = this._pickImgSrc(im);
                 if (!src) continue;
 
-                // 过滤明显非正文/极小/表情/站点徽章（可按需增强）
+               
                 const low = src.toLowerCase();
                 if (low.includes("/emoji") || low.includes("data:image")) continue;
 
-                // 常见图扩展名
+               
                 if (/\.(jpg|jpeg|png|webp|gif)(\?|#|$)/i.test(low) || low.startsWith("https://i.postimg.cc/")) {
                     images.push(src);
                 }
@@ -201,14 +201,14 @@ class IGay69Magazine extends ComicSource {
             return { images };
         },
 
-        // 针对图片请求按需调整（一般不需要）
+        
         onImageLoad: (url, comicId, epId) => {
             // 始终通过 Workers 代理转发图片请求，规避目标站反爬/直链限制
             const finalUrl = this.proxify(url);
             let referer = 'https://igay69.com';
             try {
                 const u = new URL(url);
-                // 以图片源站为 Referer（若可解析），否则退回目标站主页
+                
                 referer = u.origin || referer;
             } catch (_) {}
             return {
@@ -220,7 +220,7 @@ class IGay69Magazine extends ComicSource {
             };
         },
 
-        // [Optional] 缩略图加载配置（用于列表封面），同样通过代理与 Referer
+        
         onThumbnailLoad: (url) => {
             let referer = 'https://igay69.com';
             try {
@@ -233,10 +233,10 @@ class IGay69Magazine extends ComicSource {
             };
         },
 
-        // 正则匹配 ID（可选）
+       
         idMatch: null,
 
-        // 处理外部链接为 comicId（可选）
+        
         link: {
             domains: ['igay69.com'],
             linkToId: (url) => {
@@ -250,7 +250,7 @@ class IGay69Magazine extends ComicSource {
             }
         },
 
-        // 标签翻译（关闭）
+        
         enableTagsTranslate: false,
     };
 }
