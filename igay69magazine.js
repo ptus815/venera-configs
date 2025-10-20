@@ -1,6 +1,6 @@
 class IGay69Magazine extends ComicSource {
-    name = "IGay69 Magazine";
-    key = "igay69_mag";
+    name = "IGay69Magazine";
+    key = "igay69mag";
     version = "1.0.1";
     minAppVersion = "1.0.0";
     // 可留空或指向你托管此脚本的 URL
