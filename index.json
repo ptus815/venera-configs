@@ -115,7 +115,7 @@
         "fileName": "igay69_magazine.js",
         "key": "igay69_mag",
         "version": "1.0.1",
-        "url": "https://raw.githubusercontent.com/ptus815/venera-configs/refs/heads/main/igay69_magazine.js",
+        "url": "https://cdn.jsdelivr.net/gh/ptus815/venera-configs@main/igay69_magazine.js",
         "description": "IGay69 magazine via workers proxy"
     }
 ]
