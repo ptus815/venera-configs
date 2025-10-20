@@ -4,7 +4,7 @@ class IGay69Magazine extends ComicSource {
     version = "1.0.1";
     minAppVersion = "1.0.0";
     // 可留空或指向你托管此脚本的 URL
-    url = "https://raw.githubusercontent.com/ptus815/venera-configs/refs/heads/main/igay69_magazine.js";
+    url = "https://cdn.jsdelivr.net/gh/ptus815/venera-configs@main/igay69_magazine.js";
 
     // 代理前缀（Workers）
     proxyBase = "https://eason086.dpdns.org/";
